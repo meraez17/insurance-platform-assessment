@@ -1,0 +1,47 @@
+name: quality
+on:
+  push:
+  pull_request:
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    defaults: {run: {working-directory: orchestrator}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: '1.23', cache: false}
+      - run: go mod tidy
+      - run: test -z "$(gofmt -l .)"
+      - run: go test -race ./...
+      - uses: golangci/golangci-lint-action@v6
+        with: {version: v1.64, working-directory: orchestrator, args: --timeout=5m}
+  dotnet:
+    runs-on: ubuntu-latest
+    defaults: {run: {working-directory: issuer-service}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: {dotnet-version: '8.0.x'}
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release -warnaserror
+  typescript:
+    runs-on: ubuntu-latest
+    strategy: {matrix: {project: [simulators, ops-console]}}
+    defaults: {run: {working-directory: '${{ matrix.project }}'}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm, cache-dependency-path: '${{ matrix.project }}/package-lock.json'}
+      - run: npm ci
+      - run: npm run build
+  compose:
+    runs-on: ubuntu-latest
+    needs: [go, dotnet, typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose up -d --build
+      - run: bash scripts/smoke-test.sh
+      - if: always()
+        run: docker compose logs --no-color
+      - if: always()
+        run: docker compose down -v
