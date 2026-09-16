@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: insurance
+      POSTGRES_USER: insurance
+      POSTGRES_PASSWORD: insurance
+    ports: ["5432:5432"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./orchestrator/migrations/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U insurance -d insurance"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    ports: ["5672:5672", "15672:15672"]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  orchestrator:
+    build: ./orchestrator
+    environment:
+      DATABASE_URL: postgres://insurance:insurance@postgres:5432/insurance?sslmode=disable
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      ISSUER_URL: http://issuer-service:8081
+      SIMULATOR_URL: http://simulators:8082
+      WEBHOOK_HMAC_SECRET: local-development-secret
+    ports: ["8080:8080"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      rabbitmq: {condition: service_healthy}
+
+  issuer-service:
+    build: ./issuer-service
+    environment:
+      LEGACY_ISSUER_URL: http://simulators:8082/legacy/
+    ports: ["8081:8081"]
+    depends_on: [simulators]
+
+  simulators:
+    build: ./simulators
+    environment:
+      ORCHESTRATOR_WEBHOOK_URL: http://orchestrator:8080/webhooks/payments
+      WEBHOOK_HMAC_SECRET: local-development-secret
+    ports: ["8082:8082"]
+
+  ops-console:
+    build: ./ops-console
+    environment:
+      ORCHESTRATOR_INTERNAL_URL: http://orchestrator:8080
+    ports: ["3000:3000"]
+    depends_on: [orchestrator]
+
+volumes:
+  postgres_data:
