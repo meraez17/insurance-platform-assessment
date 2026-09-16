@@ -26,6 +26,7 @@ services:
 
   orchestrator:
     build: ./orchestrator
+    restart: on-failure
     environment:
       DATABASE_URL: postgres://insurance:insurance@postgres:5432/insurance?sslmode=disable
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
