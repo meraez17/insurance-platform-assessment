@@ -102,6 +102,12 @@ El registro detallado se mantendrá en `docs/AI_USAGE.md`, incluyendo prompt, pr
 - `docs/TEST_PLAN.md`: escenarios y evidencias.
 - `docs/VIDEO_AND_INTERVIEW.md`: guion y preparación de sustentación.
 
-## Verificación pendiente antes de presentar
+## Evidencia publicada
 
-El código TypeScript fue compilado en el entorno de elaboración. La validación de Go, .NET y Docker Compose debe ejecutarse en una máquina con Go 1.23, .NET 8 y Docker, o mediante el workflow incluido. No debe afirmarse que el pipeline está verde hasta disponer de la URL real de GitHub Actions.
+- [PR correctivo de autenticación en el fork Go](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1)
+- [Validaciones del PR correctivo](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1/checks)
+- [Pipeline del repositorio principal](https://github.com/meraez17/insurance-platform-assessment/actions)
+
+## Verificación
+
+El pipeline del repositorio principal valida Go, .NET, TypeScript y el flujo integrado con Docker Compose. El PR correctivo ejecuta pruebas en Go 1.21, 1.22 y 1.23, formato, lint, análisis de seguridad y pruebas de integración de API. Las ejecuciones publicadas finalizaron correctamente antes de la entrega.
