@@ -107,7 +107,6 @@ El registro detallado se mantendrá en `docs/AI_USAGE.md`, incluyendo prompt, pr
 - [PR correctivo de autenticación en el fork Go](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1)
 - [Validaciones del PR correctivo](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1/checks)
 - [Pipeline del repositorio principal](https://github.com/meraez17/insurance-platform-assessment/actions)
-
 - [Video de sustentación](https://youtu.be/uzADlGa7TVw)
 
 ## Verificación
