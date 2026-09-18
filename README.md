@@ -34,14 +34,14 @@ La consola operativa queda disponible en `http://localhost:3000` y RabbitMQ Mana
 
 Servicios previstos:
 
-| Componente | Tecnología | Puerto | Responsabilidad |
-|---|---|---:|---|
-| Orchestrator | Go | 8080 | Estado de la orden, idempotencia, outbox, reintentos y reconciliación |
-| Issuer service | C#/.NET | 8081 | Capa anticorrupción frente al emisor legado |
-| Simulators | TypeScript | 8082 | Cotizador, PSP y emisor con inyección de caos |
-| Ops console | Next.js | 3000 | Consulta, trazabilidad y acciones operativas |
-| PostgreSQL | PostgreSQL | 5432 | Órdenes, eventos, idempotencia y outbox |
-| Broker | RabbitMQ | 5672 | Procesamiento asíncrono, reintentos y DLQ |
+| Componente     | Tecnología | Puerto | Responsabilidad                                                       |
+| -------------- | ---------- | -----: | --------------------------------------------------------------------- |
+| Orchestrator   | Go         |   8080 | Estado de la orden, idempotencia, outbox, reintentos y reconciliación |
+| Issuer service | C#/.NET    |   8081 | Capa anticorrupción frente al emisor legado                           |
+| Simulators     | TypeScript |   8082 | Cotizador, PSP y emisor con inyección de caos                         |
+| Ops console    | Next.js    |   3000 | Consulta, trazabilidad y acciones operativas                          |
+| PostgreSQL     | PostgreSQL |   5432 | Órdenes, eventos, idempotencia y outbox                               |
+| Broker         | RabbitMQ   |   5672 | Procesamiento asíncrono, reintentos y DLQ                             |
 
 ## Flujo y estados
 
@@ -107,6 +107,8 @@ El registro detallado se mantendrá en `docs/AI_USAGE.md`, incluyendo prompt, pr
 - [PR correctivo de autenticación en el fork Go](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1)
 - [Validaciones del PR correctivo](https://github.com/meraez17/golang-gin-realworld-example-app/pull/1/checks)
 - [Pipeline del repositorio principal](https://github.com/meraez17/insurance-platform-assessment/actions)
+
+- [Video de sustentación](https://youtu.be/uzADlGa7TVw)
 
 ## Verificación
 
